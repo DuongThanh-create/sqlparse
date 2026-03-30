@@ -23,8 +23,7 @@ public class SqlSubqueryCleaner {
 //                "WHERE EXISTS (SELECT 1 FROM blacklist b WHERE b.user_id = u.id)";
 
 
-        String sql = "SELECT id, name, cloumn, hdjdj as total_log " +
-                "FROM users ";
+        String sql = "SELECT b.action_audit_id, b.thue_bao, b.nhan_vien, b.shop_code, b.action_code, b.product_code, b.product_code_daunoi, b.sub_id, b.contract_id, b.issue_datetime, b.shop_province, b.staff_id, b.reason_id, b.status, b.act_status, b.dev_staff_id nhanvien_moigioi, b.manhanvien_moigioi, b.telecom_service_id, b.promotion_code, b.group_id, b.main FROM ( SELECT s.isdn thue_bao, s.sub_id sub_id, a.action_code, a.issue_datetime issue_datetime, a.user_name nhan_vien, sh.shop_code shop_code, sh.province shop_province, st.staff_id, st.shop_id, a.reason_id, s.status, s.contract_id, s.dev_staff_id, st1.staff_code manhanvien_moigioi, s.act_status, s.product_code Product_code, s.org_product_code product_code_daunoi, s.telecom_service_id, a.action_audit_id, s.promotion_code, gm.main, gm.group_id, row_number() over (partition by a.action_audit_id,a.issue_datetime ORDER BY a.issue_datetime DESC ) rank FROM f_action_audit a inner join subscriber s on (a.pk_id = s.sub_id and s.telecom_service_id in ( '73') and s.isdn not like 'msip%') left join f_bccs_sale_groups_member_pyc_29756 gm on (s.sub_id=gm.sub_id and gm.status=1 and gm.partition = '${YYYYMMDD:DD-1}') left join d_staff st on (st.staff_code = a.user_name and st.status = 1) left join d_shop sh on (st.shop_id = sh.shop_id and sh.status = 1) left join d_staff st1 on (st1.staff_id = s.dev_staff_id and st1.status = 1) WHERE 1=1 and a.action_code IN ('00') and a.partition >= '${YYYYMM01:MM-1}' and a.partition < '${YYYYMM01}' and substr(a.issue_datetime,1,8) >= '${YYYYMM01:MM-1}' and substr(a.issue_datetime,1,8) < '${YYYYMM01}' ) b WHERE rank = 1";
 
         parseAndClean(sql);
     }
